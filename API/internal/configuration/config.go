@@ -11,6 +11,7 @@ type HTTP struct {
 }
 
 type GRPC struct {
+	host string `mapstructure:"host"`
 	port string `mapstructure:"port"`
 }
 
