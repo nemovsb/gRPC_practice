@@ -13,16 +13,16 @@ import (
 type AppConfig struct {
 	HTTP    `mapstructure:"http"`
 	GRPC    `mapstructure:"grpc"`
-	zapMode string `mapstructure:"zap_mode"`
+	ZapMode string `mapstructure:"zap_mode"`
 }
 
 type HTTP struct {
-	port string `mapstructure:"port"`
+	Port string `mapstructure:"port"`
 }
 
 type GRPC struct {
-	host string `mapstructure:"host"`
-	port string `mapstructure:"port"`
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 type Configurator interface {
@@ -68,9 +68,9 @@ func NewViper(filename string) *viper.Viper {
 		v.AddConfigPath(filepath.FromSlash("./build/cfg/"))
 	}
 
-	v.SetDefault("AppConfig.HTTP.port", "8081")
-	v.SetDefault("AppConfig.GRPC.port", "50051")
-	v.SetDefault("AppConfig.GRPC.host", "0.0.0.0")
+	v.SetDefault("HTTP.port", "8081")
+	v.SetDefault("GRPC.port", "50051")
+	v.SetDefault("GRPC.host", "0.0.0.0")
 
 	v.SetDefault("zapMode", "production")
 
@@ -91,7 +91,7 @@ func NewConfiguration(v *viper.Viper) (*AppConfig, error) {
 		return nil, fmt.Errorf("%w: %s", ErrUnmarshalConfig, err)
 	}
 
-	fmt.Printf("My config: %+v", c)
+	fmt.Printf("My config: %+v\n", c)
 
 	return &c, nil
 }

@@ -1,9 +1,9 @@
 {
-    "http": {
+    "http":{
         "port": "8080"
     },
-    "grpc": {
-        "host": "0.0.0.0",
+    "grpc":{
+        "host": "localhost",
         "port": "50051"
     },
     "zap_mode": "development"

@@ -7,13 +7,13 @@ import (
 
 func NewHTTPServerConfig(appConfig *AppConfig) *http_api.ServerConfig {
 	return &http_api.ServerConfig{
-		Port: appConfig.HTTP.port,
+		Port: appConfig.HTTP.Port,
 	}
 }
 
 func NewGRPCCOnfig(appConfig *AppConfig) *grpc_api.GRPCConfig {
 	return &grpc_api.GRPCConfig{
-		Host: appConfig.GRPC.host,
-		Port: appConfig.GRPC.port,
+		Host: appConfig.GRPC.Host,
+		Port: appConfig.GRPC.Port,
 	}
 }

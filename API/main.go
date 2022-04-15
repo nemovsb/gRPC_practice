@@ -23,7 +23,9 @@ func main() {
 		log.Fatal("Read config error: ", err)
 	}
 
-	grpcClient, closeGRPC := grpc_api.NewGRPCClient(configuration.NewGRPCCOnfig(config))
+	log.Printf("Config: %+v\nconfig\n", config)
+
+	grpcClient := grpc_api.NewGRPCClient(configuration.NewGRPCCOnfig(config))
 
 	userHandler := controllers.NewUserHandler(grpcClient)
 	set := controllers.NewHandlerSet(userHandler)
@@ -51,7 +53,7 @@ func main() {
 	}, func(error) {
 		err = server.Shutdown()
 
-		closeGRPC()
+		grpcClient.Close()
 
 		log.Println("shutdown Http Server error")
 	})
