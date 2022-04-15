@@ -1,9 +1,19 @@
 package configuration
 
+import (
+	"errors"
+	"fmt"
+	"log"
+	"path/filepath"
+	"strings"
+
+	"github.com/spf13/viper"
+)
+
 type AppConfig struct {
-	HTTP
-	GRPC
-	zapMode string
+	HTTP    `mapstructure:"http"`
+	GRPC    `mapstructure:"grpc"`
+	zapMode string `mapstructure:"zap_mode"`
 }
 
 type HTTP struct {
@@ -17,4 +27,71 @@ type GRPC struct {
 
 type Configurator interface {
 	NewAppConfig() *AppConfig
+}
+
+const EnvProduction = "Production"
+
+var ErrUnmarshalConfig = errors.New("viper failed to unmarshal app config")
+
+func ViperConfigurationProvider(env string, writeConfig bool) (cfg *AppConfig, err error) {
+	var filename string
+
+	switch env {
+	case "Production":
+		filename = "config"
+	default:
+		filename = "config"
+	}
+
+	v := NewViper(filename)
+
+	cfg, err = NewConfiguration(v)
+	if err != nil {
+		return
+	}
+
+	if writeConfig {
+		if err = v.WriteConfig(); err != nil {
+			log.Println("viper failed to write app config file:", err)
+		}
+	}
+
+	return cfg, nil
+}
+
+func NewViper(filename string) *viper.Viper {
+	v := viper.New()
+
+	if filename != "" {
+		v.SetConfigName(filename)
+		v.AddConfigPath(".")
+		v.AddConfigPath(filepath.FromSlash("./build/cfg/"))
+	}
+
+	v.SetDefault("AppConfig.HTTP.port", "8081")
+	v.SetDefault("AppConfig.GRPC.port", "50051")
+	v.SetDefault("AppConfig.GRPC.host", "0.0.0.0")
+
+	v.SetDefault("zapMode", "production")
+
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.SetEnvPrefix("MYAPP")
+	v.AutomaticEnv()
+
+	if err := v.ReadInConfig(); err != nil {
+		log.Println("viper failed to read app config file:", err)
+	}
+
+	return v
+}
+
+func NewConfiguration(v *viper.Viper) (*AppConfig, error) {
+	var c AppConfig
+	if err := v.Unmarshal(&c); err != nil {
+		return nil, fmt.Errorf("%w: %s", ErrUnmarshalConfig, err)
+	}
+
+	fmt.Printf("My config: %+v", c)
+
+	return &c, nil
 }

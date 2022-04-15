@@ -20,7 +20,7 @@ type GRPCClient struct {
 	User user.UserStorageClient
 }
 
-func NewGRPCClient(cfg *GRPCConfig) *GRPCClient {
+func NewGRPCClient(cfg *GRPCConfig) (client *GRPCClient, close func()) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -28,7 +28,7 @@ func NewGRPCClient(cfg *GRPCConfig) *GRPCClient {
 
 	user := user.NewUserStorageClient(conn)
 
-	return &GRPCClient{User: user}
+	return &GRPCClient{User: user}, conn.Close()
 }
 
 func (g *GRPCClient) GetUserByID(id int32) (*domain.User, error) {
@@ -40,4 +40,8 @@ func (g *GRPCClient) GetUserByID(id int32) (*domain.User, error) {
 		Id:   r.Id,
 		Name: r.Name,
 	}, nil
+}
+
+func (g *GRPCClient) Close() {
+	g.User.
 }

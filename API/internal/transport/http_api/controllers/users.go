@@ -18,7 +18,7 @@ func NewUserHandler(grpc *grpc_api.GRPCClient) *UserHandler {
 	}
 }
 
-func (h *UserHandler) Get(ctx gin.Context) {
+func (h *UserHandler) Get(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, nil)
@@ -33,14 +33,14 @@ func (h *UserHandler) Get(ctx gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-func (h *UserHandler) Put(ctx gin.Context) {
+func (h *UserHandler) Put(ctx *gin.Context) {
 	//TODO
 }
 
-func (h *UserHandler) Post(ctx gin.Context) {
+func (h *UserHandler) Post(ctx *gin.Context) {
 	//TODO
 }
 
-func (h *UserHandler) Del(ctx gin.Context) {
+func (h *UserHandler) Del(ctx *gin.Context) {
 	//TODO
 }
