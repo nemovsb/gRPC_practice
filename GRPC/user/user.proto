@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "https://github.com/nemovsb/gRPC_practice/GRPC/user";
+
+package user;
+
+
+service UserStorage {
+  rpc GetByID (GetUserRequest) returns (UserResponse) {}
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message UserResponse {
+  int32 id = 1;
+  string name = 2;
+}

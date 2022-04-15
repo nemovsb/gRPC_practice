@@ -34,10 +34,10 @@ func NewRouter(h HandlerSet) (router *gin.Engine) {
 
 	user := router.Group("/users")
 	{
-		user.GET("", h.UsersHandler.Get)
-		user.PUT("", h.UsersHandler.Put)
+		user.GET("/{id}", h.UsersHandler.Get)
+		user.PUT("/{id}", h.UsersHandler.Put)
 		user.POST("", h.UsersHandler.Post)
-		user.DELETE("", h.UsersHandler.Del)
+		user.DELETE("/{id}", h.UsersHandler.Del)
 	}
 
 	return router
