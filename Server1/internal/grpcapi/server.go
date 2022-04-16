@@ -11,20 +11,26 @@ import (
 
 type Server struct {
 	user.UnimplementedUserStorageServer
+	DB
 }
 
-func NewServer() *grpc.Server {
+type DB interface {
+	GetUserByID(id int32) *user.UserResponse
+	//PutUser() *user.UserResponse
+}
+
+func NewServer(db DB) *grpc.Server {
 
 	s := grpc.NewServer()
-	user.RegisterUserStorageServer(s, &Server{})
+	user.RegisterUserStorageServer(s, &Server{DB: db})
 
 	return s
 }
 
 func (s *Server) GetByID(ctx context.Context, in *user.GetUserRequest) (*user.UserResponse, error) {
 	log.Printf("Received: %v\n", in.GetId())
-	return &user.UserResponse{
-		Id:   in.GetId(),
-		Name: "Serge",
-	}, nil
+
+	response := s.DB.GetUserByID(in.GetId())
+
+	return response, nil
 }

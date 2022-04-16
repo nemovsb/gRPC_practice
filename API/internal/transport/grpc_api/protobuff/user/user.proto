@@ -7,13 +7,34 @@ package user;
 
 service UserStorage {
   rpc GetByID (GetUserRequest) returns (UserResponse) {}
+  rpc Post (PostUserRequest) returns (UserResponse) {}
+  rpc Put (PutUserRequest) returns (UserResponse) {}
+  rpc DelByID (DelUserRequest) returns (UserDelResponse) {}
 }
 
 message GetUserRequest {
   int32 id = 1;
 }
 
+message PostUserRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message PutUserRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message DelUserRequest {
+  int32 id = 1;
+}
+
 message UserResponse {
   int32 id = 1;
   string name = 2;
+}
+
+message UserDelResponse {
+  bool ok = 1;
 }
